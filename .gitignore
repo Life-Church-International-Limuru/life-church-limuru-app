@@ -9,6 +9,9 @@ env/
 # Database
 db.sqlite3
 
+# Local data files
+members.xlsx
+
 # VS Code
 .vscode/
 
