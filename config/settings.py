@@ -47,7 +47,10 @@ INSTALLED_APPS = [
     'sermons',
     'prayer_requests',
     'members',
-    'audit'
+    'audit',
+    'church_groups',
+    'assimilation',
+    'visitors',
 ]
 
 MIDDLEWARE = [

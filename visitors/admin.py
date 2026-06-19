@@ -1,33 +1,33 @@
+"""
+Visitor Administration
+"""
+
 from django.contrib import admin
-from .models import Member
+
+from .models import Visitor
 
 
-@admin.register(Member)
-class MemberAdmin(admin.ModelAdmin):
+@admin.register(Visitor)
+class VisitorAdmin(admin.ModelAdmin):
 
     list_display = (
-        "member_number",
         "full_name",
-        "gender",
-        "marital_status",
+        "phone_number",
         "family_group",
         "life_stage_group",
-        "membership_status",
-        "active",
+        "follow_up_status",
     )
 
     search_fields = (
-        "member_number",
         "full_name",
         "phone_number",
         "email",
     )
 
     list_filter = (
+        "follow_up_status",
         "gender",
         "marital_status",
-        "membership_status",
-        "active",
         "family_group",
         "life_stage_group",
     )
@@ -35,8 +35,4 @@ class MemberAdmin(admin.ModelAdmin):
     filter_horizontal = (
         "ministries",
         "departments",
-    )
-
-    ordering = (
-        "full_name",
     )

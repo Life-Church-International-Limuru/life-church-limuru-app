@@ -2,6 +2,12 @@ from django.db import models
 from django.conf import settings
 
 
+from church_groups.models import (
+    FamilyGroup,
+    LifeStageGroup,
+    Ministry,
+    Department,
+)
 class Member(models.Model):
 
     GENDER_CHOICES = (
@@ -116,6 +122,30 @@ class Member(models.Model):
         default=True
     )
 
+    family_group = models.ForeignKey(
+        FamilyGroup,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    life_stage_group = models.ForeignKey(
+        LifeStageGroup,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
+    ministries = models.ManyToManyField(
+        Ministry,
+        blank=True
+    )
+
+    departments = models.ManyToManyField(
+        Department,
+        blank=True
+    )
+    
     created_at = models.DateTimeField(
         auto_now_add=True
     )
