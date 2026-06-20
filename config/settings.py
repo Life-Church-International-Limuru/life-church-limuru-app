@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +21,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-$ej6_zo+-2_va@aeh2qj&8+uejtag31*c2gds&ne6-2c_i$-f3'
+"""
+Security Configuration
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+Values are loaded from environment variables
+for production deployments.
+"""
 
-ALLOWED_HOSTS = []
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-development-key"
+)
+
+DEBUG = config(
+    "DEBUG",
+    default=True,
+    cast=bool
+)
+
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="127.0.0.1,localhost"
+).split(",")
 
 
 # Application definition
@@ -56,6 +73,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -92,16 +110,32 @@ CORS_ALLOW_ALL_ORIGINS = True
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
+"""
+Database Configuration
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+Local Development:
+    SQLite
+
+Railway Production:
+    PostgreSQL
+"""
+
+DATABASE_URL = config(
+    "DATABASE_URL",
+    default=None
+)
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(DATABASE_URL)
     }
-}
-
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -139,4 +173,16 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'accounts.User'
 
-STATIC_URL = 'static/'
+"""
+Static Files Configuration
+"""
+
+STATIC_URL = "static/"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

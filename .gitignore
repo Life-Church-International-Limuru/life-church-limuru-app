@@ -5,9 +5,11 @@ __pycache__/
 # Virtual Environment
 venv/
 env/
+.env
 
 # Database
 db.sqlite3
+staticfiles
 
 # Local data files
 members.xlsx
