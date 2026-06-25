@@ -1,6 +1,7 @@
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 
 # Virtual Environment
 venv/
@@ -10,6 +11,7 @@ env/
 # Database
 db.sqlite3
 staticfiles
+media/
 
 # Local data files
 members.xlsx
@@ -23,3 +25,4 @@ members.xlsx
 # OS files
 .DS_Store
 Thumbs.db
+

@@ -1,26 +1,76 @@
-
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
 )
 
+
+def health_check(request):
+    """
+    Simple health endpoint used by:
+    - Railway
+    - Frontend developers
+    - Monitoring tools
+    """
+    return JsonResponse(
+        {
+            "status": "healthy",
+            "service": "Life Church Limuru API",
+            "version": "1.0.0",
+        }
+    )
+
+
 urlpatterns = [
+    # Health Check
+    path("", health_check),
+
+    # Django Admin
     path("admin/", admin.site.urls),
 
-    path("api/auth/", include("accounts.urls")),
-
+    # ==========================
+    # Authentication APIs
+    # ==========================
     path(
-        "api/auth/login/",
-        TokenObtainPairView.as_view(),
-        name="token_obtain_pair",
+        "api/auth/",
+        include("accounts.urls"),
+    ),
+
+    # ==========================
+    # Member APIs
+    # ==========================
+    path(
+        "api/members/",
+        include("members.urls"),
+    ),
+
+    # ==========================
+    # API Documentation
+    # ==========================
+    path(
+        "api/schema/",
+        SpectacularAPIView.as_view(),
+        name="schema",
     ),
 
     path(
-        "api/auth/refresh/",
-        TokenRefreshView.as_view(),
-        name="token_refresh",
+        "api/docs/",
+        SpectacularSwaggerView.as_view(
+            url_name="schema",
+        ),
+        name="swagger-ui",
     ),
+    
+    path(
+    "api/dashboard/",
+    include("dashboard.urls"),
+),
+    
+    path(
+    "api/church/",
+    include("church_groups.urls"),
+),
 ]

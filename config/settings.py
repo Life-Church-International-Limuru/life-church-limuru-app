@@ -66,6 +66,8 @@ INSTALLED_APPS = [
     'church_groups',
     'assimilation',
     'visitors',
+    'drf_spectacular',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -98,8 +100,14 @@ TEMPLATES = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # JWT Authentication
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+
+    # OpenAPI Schema Generator
+    "DEFAULT_SCHEMA_CLASS": (
+        "drf_spectacular.openapi.AutoSchema"
     ),
 }
 
@@ -199,3 +207,23 @@ CSRF_TRUSTED_ORIGINS = [
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+
+"""
+API Documentation Configuration
+
+drf-spectacular generates OpenAPI 3 compliant
+documentation for frontend and third-party integrations.
+"""
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Life Church Limuru API",
+    "DESCRIPTION": (
+        "Backend APIs for the Life Church Limuru "
+        "Web and Mobile Applications"
+    ),
+    "VERSION": "1.0.0",
+
+    # Better organization
+    "SERVE_INCLUDE_SCHEMA": False,
+}
